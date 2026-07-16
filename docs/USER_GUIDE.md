@@ -34,6 +34,8 @@ Tamu Scan QR → Pilih Menu → Tambah ke Keranjang → Bayar → Dapur Terima �
 
 ### 2.1 Scan QR Code
 
+Gunakaan [Scan Page](https://qr-ordering-eight.vercel.app/scan) atau aplikasi scan
+
 1. Tamu scan QR code yang tertera di meja
 2. Menu digital terbuka di browser HP
 3. Outlet otomatis terdeteksi dari QR
@@ -82,7 +84,7 @@ Tamu Scan QR → Pilih Menu → Tambah ke Keranjang → Bayar → Dapur Terima �
 
 ## 3. Admin Panel
 
-Akses: `/admin` (login required)
+Akses: [`/admin`](https://qr-ordering-eight.vercel.app/login) (login required)
 
 ### 3.1 Dashboard
 
