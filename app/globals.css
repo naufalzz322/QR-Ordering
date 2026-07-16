@@ -1,0 +1,328 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    border-color: #E7E5E4;
+  }
+
+  html {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-guest-bg text-guest-text;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* Focus states for accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary-500;
+  }
+}
+
+@layer components {
+  /* Button variants */
+  .btn {
+    @apply inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-primary-700 text-white hover:bg-primary-800;
+  }
+
+  .btn-secondary {
+    @apply bg-neutral-100 text-neutral-900 hover:bg-neutral-200;
+  }
+
+  .btn-outline {
+    @apply border border-neutral-300 bg-white hover:bg-neutral-50 hover:border-neutral-400;
+  }
+
+  .btn-ghost {
+    @apply hover:bg-neutral-100 text-neutral-700;
+  }
+
+  .btn-sm {
+    @apply h-9 rounded-md px-3 text-xs;
+  }
+
+  .btn-md {
+    @apply h-10 rounded-md px-4;
+  }
+
+  .btn-lg {
+    @apply h-12 rounded-lg px-8 text-base;
+  }
+
+  /* Card component */
+  .card {
+    @apply bg-white rounded-lg border border-neutral-200 shadow-sm;
+  }
+
+  .card-elevated {
+    @apply bg-white rounded-lg shadow-md;
+  }
+
+  /* Input component */
+  .input {
+    @apply flex h-10 w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  /* Badge component */
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply bg-primary-100 text-primary-700;
+  }
+
+  .badge-success {
+    @apply bg-success-50 text-success-700;
+  }
+
+  .badge-warning {
+    @apply bg-warning-50 text-warning-700;
+  }
+
+  .badge-error {
+    @apply bg-error-50 text-error-700;
+  }
+
+  /* Container */
+  .container-narrow {
+    @apply max-w-4xl mx-auto px-4;
+  }
+
+  .container-wide {
+    @apply max-w-7xl mx-auto px-4;
+  }
+}
+
+@layer utilities {
+  /* Text utilities */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Custom scrollbar */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #D6D3D1;
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #A8A29E;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Floating order tracker animations */
+@keyframes floatPulse {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+  50% {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.15);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.1);
+  }
+  60% {
+    transform: scale(1);
+  }
+}
+
+@keyframes borderPulse {
+  0%, 100% {
+    border-color: rgb(234 88 12 / 0.5);
+    box-shadow: 0 0 0 0 rgb(234 88 12 / 0.4);
+  }
+  50% {
+    border-color: rgb(234 88 12);
+    box-shadow: 0 0 0 4px rgb(234 88 12 / 0);
+  }
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-float-pulse {
+  animation: floatPulse 3s ease-in-out infinite, borderPulse 2s ease-in-out infinite;
+}
+
+.animate-heartbeat {
+  animation: heartbeat 2s ease-in-out infinite;
+}
+
+.animate-ping-slow {
+  animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Guest interface warm background */
+.guest-bg {
+  background-color: #FFFBF0;
+}
+
+/* Kitchen display dark theme */
+.kitchen-bg {
+  background-color: #111827;
+  color: white;
+}
+
+/* HABIS overlay for out of stock items */
+.habis-overlay {
+  position: relative;
+}
+
+.habis-overlay::after {
+  content: 'HABIS';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1.25rem;
+  border-radius: inherit;
+}
+
+/* Smooth page transitions */
+.page-transition {
+  animation: slide-in 300ms ease-out;
+}
+
+/* Floating cart button */
+.floating-cart {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+}
+
+/* Kitchen order card statuses */
+.order-card-new {
+  background-color: #7F1D1D;
+  border-left: 4px solid #DC2626;
+}
+
+.order-card-processing {
+  background-color: #78350F;
+  border-left: 4px solid #D97706;
+}
+
+.order-card-ready {
+  background-color: #14532D;
+  border-left: 4px solid #16A34A;
+}
+
+/* Badge bounce animation */
+@keyframes badge-bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.animate-badge-bounce {
+  animation: badge-bounce 200ms ease-out;
+}
+
+/* Slide in animation */
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 300ms ease-out;
+}
+
+/* Pulse animation for loading states */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* Spin animation */
+.animate-spin-slow {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

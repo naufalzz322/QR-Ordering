@@ -1,0 +1,176 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      UserRole @default(ADMIN)
+  outletId  String?
+  outlet    Outlet?  @relation(fields: [outletId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  KITCHEN
+}
+
+model Outlet {
+  id               String      @id @default(cuid())
+  name             String
+  slug             String      @unique
+  address          String?
+  phone            String?
+  logoUrl          String?
+  avgPrepTimeMinutes Int       @default(8)
+  isEstimationEnabled Boolean   @default(true)
+  users            User[]
+  tables           Table[]
+  categories       Category[]
+  menuItems        MenuItem[]
+  orders           Order[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+model Table {
+  id          String      @id @default(cuid())
+  outletId    String
+  outlet      Outlet      @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  tableNumber Int
+  qrToken     String      @unique @default(cuid())
+  status      TableStatus @default(EMPTY)
+  orders      Order[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@unique([outletId, tableNumber])
+}
+
+enum TableStatus {
+  EMPTY
+  ACTIVE
+  DONE
+}
+
+model Category {
+  id        String     @id @default(cuid())
+  outletId  String
+  outlet    Outlet     @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  name      String
+  sortOrder Int        @default(0)
+  isActive  Boolean    @default(true)
+  items     MenuItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@unique([outletId, name])
+}
+
+model MenuItem {
+  id                  String        @id @default(cuid())
+  outletId            String
+  outlet              Outlet        @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  categoryId          String
+  category            Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name                String
+  description         String?
+  basePrice           Decimal       @db.Decimal(10, 0)
+  photoUrl           String?
+  isAvailable        Boolean       @default(true)
+  avgPrepTimeMinutes Int           @default(8)
+  sortOrder           Int           @default(0)
+  variants            MenuVariant[]
+  orderItems          OrderItem[]
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@index([outletId, categoryId])
+}
+
+model MenuVariant {
+  id               String   @id @default(cuid())
+  menuItemId       String
+  menuItem         MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  name             String
+  additionalPrice  Decimal  @db.Decimal(10, 0) @default(0)
+  isDefault        Boolean  @default(false)
+  createdAt        DateTime  @default(now())
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
+  tableId         String
+  table           Table       @relation(fields: [tableId], references: [id])
+  outletId        String
+  outlet          Outlet      @relation(fields: [outletId], references: [id])
+  status          OrderStatus @default(PENDING)
+  notes           String?
+  items           OrderItem[]
+  totalAmount     Decimal     @db.Decimal(12, 0)
+  estimatedDoneAt DateTime?
+  queuePosition   Int?
+  createdAt       DateTime    @default(now())
+  processedAt     DateTime?
+  completedAt     DateTime?
+  updatedAt       DateTime    @updatedAt
+
+  @@index([outletId, status])
+  @@index([tableId])
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+model OrderItem {
+  id         String    @id @default(cuid())
+  orderId    String
+  order      Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId String
+  menuItem   MenuItem  @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  variantId  String?
+  qty        Int
+  unitPrice  Decimal   @db.Decimal(10, 0)
+  itemNotes  String?
+  createdAt  DateTime  @default(now())
+
+  @@index([orderId])
+}
+
+// Archived orders - for historical data before table deletion
+model OrderArchive {
+  id              String      @id // Same as original order ID
+  orderNumber     String      @unique
+  tableId         String
+  tableNumber     Int         // Store table number, not relation
+  outletId        String
+  status          OrderStatus
+  notes           String?
+  totalAmount     Decimal     @db.Decimal(12, 0)
+  estimatedDoneAt DateTime?
+  queuePosition   Int?
+  createdAt       DateTime
+  processedAt     DateTime?
+  completedAt     DateTime?
+  archivedAt      DateTime    @default(now())
+
+  @@index([outletId, status])
+  @@index([outletId, completedAt])
+  @@index([tableNumber])
+}
