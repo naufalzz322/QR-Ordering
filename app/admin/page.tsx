@@ -297,41 +297,44 @@ export default function AdminDashboard() {
               ) : (
                 <div className="space-y-3">
                   {recentOrders.slice(0, 5).map((order, index) => (
-                    <div
+                    <Link
                       key={order.id}
+                      href="/admin/orders"
                       className={cn(
-                        'flex items-center justify-between p-4 rounded-xl border transition-all',
+                        'block p-4 rounded-xl border transition-all cursor-pointer',
                         index === 0 && order.status === 'PENDING'
                           ? 'bg-red-50 border-red-200 animate-pulse-subtle'
-                          : 'bg-white border-neutral-200 hover:border-primary-200'
+                          : 'bg-white border-neutral-200 hover:border-primary-200 hover:bg-primary-50/50'
                       )}
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                          <span className="text-lg font-bold text-primary-700">{order.tableNumber}</span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                            <span className="text-lg font-bold text-primary-700">{order.tableNumber}</span>
+                          </div>
+                          <div>
+                            <p className="font-semibold text-admin-text-primary">{order.orderNumber}</p>
+                            <p className="text-sm text-admin-text-secondary">
+                              Meja {order.tableNumber} · {order.timeAgo}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-semibold text-admin-text-primary">{order.orderNumber}</p>
-                          <p className="text-sm text-admin-text-secondary">
-                            Meja {order.tableNumber} · {order.timeAgo}
-                          </p>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <p className="font-semibold text-admin-text-primary">
+                              {formatCurrency(order.totalAmount)}
+                            </p>
+                            <span className={cn(
+                              'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium',
+                              getStatusBadge(order.status)
+                            )}>
+                              <span className={cn('w-1.5 h-1.5 rounded-full', getStatusBadgeDot(order.status))} />
+                              {order.status}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <p className="font-semibold text-admin-text-primary">
-                            {formatCurrency(order.totalAmount)}
-                          </p>
-                          <span className={cn(
-                            'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium',
-                            getStatusBadge(order.status)
-                          )}>
-                            <span className={cn('w-1.5 h-1.5 rounded-full', getStatusBadgeDot(order.status))} />
-                            {order.status}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               )}
