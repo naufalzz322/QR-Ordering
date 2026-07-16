@@ -66,17 +66,17 @@ export default function AdminDashboard() {
     }
   }
 
+  const { stats, recentOrders } = data || {
+    stats: { todayOrders: 0, orderChange: 0, todayRevenue: 0, revenueChange: 0, avgWaitTime: 0, bestSeller: { name: '-', qty: 0 }, activeOrders: 0 },
+    recentOrders: [],
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="w-8 h-8 animate-spin text-primary-700" />
       </div>
     )
-  }
-
-  const { stats, recentOrders } = data || {
-    stats: { todayOrders: 0, orderChange: 0, todayRevenue: 0, revenueChange: 0, avgWaitTime: 0, bestSeller: { name: '-', qty: 0 }, activeOrders: 0 },
-    recentOrders: [],
   }
 
   return (
