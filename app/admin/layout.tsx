@@ -63,7 +63,7 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1">
+          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -95,8 +95,8 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
             </Link>
           </nav>
 
-          {/* Bottom section */}
-          <div className="p-4 border-t border-admin-border space-y-1">
+          {/* Bottom section - sticky */}
+          <div className="p-4 border-t border-admin-border bg-white space-y-1">
             <Link
               href="/admin/settings"
               className={cn(
