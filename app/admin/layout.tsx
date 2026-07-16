@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { LayoutDashboard, Menu, Table2, ShoppingCart, BarChart3, Settings, LogOut, Monitor, Play, UtensilsCrossed, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ToastProvider, Toaster } from '@/components/ui/toast'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { useEffect } from 'react'
 
 const navItems = [
@@ -109,7 +109,10 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               <Settings className="w-5 h-5" />
               <span>Pengaturan</span>
             </Link>
-            <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-error-600 hover:bg-error-50 transition-colors">
+            <button
+              onClick={() => signOut({ callbackUrl: '/login' })}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-error-600 hover:bg-error-50 transition-colors"
+            >
               <LogOut className="w-5 h-5" />
               <span>Keluar</span>
             </button>
