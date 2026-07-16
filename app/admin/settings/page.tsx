@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { UtensilsCrossed, Save, Loader2, CheckCircle, Table2, ListOrdered, Clock } from 'lucide-react'
+import { UtensilsCrossed, Save, Loader2, CheckCircle, Table2, ListOrdered } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface OutletSettings {
@@ -14,7 +14,6 @@ interface OutletSettings {
   slug: string
   address: string | null
   logoUrl: string | null
-  avgPrepTimeMinutes: number
 }
 
 interface Counts {
@@ -33,7 +32,6 @@ export default function SettingsPage() {
     slug: '',
     address: '',
     logoUrl: '',
-    avgPrepTimeMinutes: 8,
   })
 
   const [counts, setCounts] = useState<Counts>({ tables: 0, menuItems: 0 })
@@ -69,7 +67,6 @@ export default function SettingsPage() {
           name: formData.name,
           address: formData.address,
           logoUrl: formData.logoUrl,
-          avgPrepTimeMinutes: formData.avgPrepTimeMinutes,
         }),
       })
 
@@ -82,11 +79,6 @@ export default function SettingsPage() {
     } finally {
       setSaving(false)
     }
-  }
-
-  const updatePrepTime = (delta: number) => {
-    const newValue = Math.max(1, Math.min(120, formData.avgPrepTimeMinutes + delta))
-    setFormData({ ...formData, avgPrepTimeMinutes: newValue })
   }
 
   if (loading) {
@@ -162,55 +154,6 @@ export default function SettingsPage() {
                 placeholder="https://example.com/logo.png"
               />
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Order Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
-                <Clock className="w-4 h-4 text-amber-600" />
-              </div>
-              Pengaturan Order
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              <Label className="whitespace-nowrap">Waktu Persiapan</Label>
-              <div className="flex items-center gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => updatePrepTime(-1)}
-                  disabled={formData.avgPrepTimeMinutes <= 1}
-                >
-                  -
-                </Button>
-                <Input
-                  type="number"
-                  value={formData.avgPrepTimeMinutes}
-                  onChange={(e) => setFormData({ ...formData, avgPrepTimeMinutes: Math.max(1, parseInt(e.target.value) || 1) })}
-                  className="w-20 text-center"
-                  min="1"
-                  max="120"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => updatePrepTime(1)}
-                  disabled={formData.avgPrepTimeMinutes >= 120}
-                >
-                  +
-                </Button>
-              </div>
-              <span className="text-sm text-admin-text-secondary">menit</span>
-            </div>
-            <p className="text-xs text-admin-text-secondary mt-2">
-              Estimasi waktu tunggu pesanan untuk pelanggan
-            </p>
           </CardContent>
         </Card>
 

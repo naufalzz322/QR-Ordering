@@ -527,7 +527,7 @@ function MenuPage() {
             </div>
 
             {/* Content */}
-            <div className="p-5 max-h-[50vh] sm:max-h-[60vh] overflow-y-auto">
+            <div className="p-5 pb-24">
               <h2 className="text-xl font-bold text-guest-text mb-1">{selectedItem.name}</h2>
               <p className="text-guest-primary font-bold text-lg mb-2">
                 {formatCurrency(getItemPrice())}
@@ -565,7 +565,7 @@ function MenuPage() {
               )}
 
               {/* Notes */}
-              <div className="mb-5">
+              <div className="mb-4">
                 <p className="text-sm font-medium text-guest-text mb-2">Catatan:</p>
                 <textarea
                   value={itemNotes}
@@ -575,9 +575,11 @@ function MenuPage() {
                   rows={2}
                 />
               </div>
+            </div>
 
-              {/* Quantity & Add Button */}
-              <div className="flex items-center gap-4">
+            {/* Fixed Bottom Button */}
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 sm:relative sm:border-0 sm:p-5 sm:bg-transparent">
+              <div className="flex items-center gap-4 max-w-md mx-auto">
                 <div className="flex items-center gap-3 bg-gray-100 rounded-full px-3 py-2">
                   <button
                     onClick={() => setQty(Math.max(1, qty - 1))}
@@ -596,7 +598,7 @@ function MenuPage() {
 
                 <Button
                   onClick={handleAddToCart}
-                  className="flex-1 bg-guest-primary hover:bg-guest-primary-hover text-white"
+                  className="flex-1 bg-guest-primary hover:bg-guest-primary-hover text-white py-4"
                 >
                   Tambah {formatCurrency(getItemPrice() * qty)}
                 </Button>
