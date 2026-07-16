@@ -1,218 +1,197 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ChevronRight, Play, CheckCircle2, Coffee, QrCode, Clock, BarChart3, Users, Zap, CreditCard } from 'lucide-react'
+import { ExternalLink, Coffee, QrCode, Monitor, BarChart3, Clock, Users, Zap, ArrowRight, CheckCircle2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { config } from '@/lib/config'
 
-interface GuideStep {
-  id: string
-  icon: React.ReactNode
-  title: string
-  description: string
-  path: string
-  cta: string
-}
+const flowSteps = [
+  {
+    step: 1,
+    title: 'Scan QR',
+    description: 'Tamu scan QR code di meja untuk buka menu digital',
+    icon: QrCode,
+    color: 'bg-primary-100 text-primary-600',
+  },
+  {
+    step: 2,
+    title: 'Pilih Menu',
+    description: 'Browse menu, tambah ke keranjang, isi catatan jika perlu',
+    icon: Coffee,
+    color: 'bg-green-100 text-green-600',
+  },
+  {
+    step: 3,
+    title: 'Bayar',
+    description: 'Pilih metode: Tunai atau QRIS',
+    icon: Zap,
+    color: 'bg-amber-100 text-amber-600',
+  },
+  {
+    step: 4,
+    title: 'Dapur Terima',
+    description: 'Order masuk ke Kitchen Display secara real-time',
+    icon: Monitor,
+    color: 'bg-orange-100 text-orange-600',
+  },
+  {
+    step: 5,
+    title: 'Pantau Status',
+    description: 'Tamu cek status pesanan dari HP mereka',
+    icon: Clock,
+    color: 'bg-blue-100 text-blue-600',
+  },
+  {
+    step: 6,
+    title: 'Selesai',
+    description: 'Pesanan siap, tamu notified untuk mengambil',
+    icon: CheckCircle2,
+    color: 'bg-emerald-100 text-emerald-600',
+  },
+]
 
-const guideSteps: GuideStep[] = [
+const quickLinks = [
   {
-    id: 'scan-qr',
-    icon: <QrCode className="w-6 h-6" />,
-    title: '1. Scan QR Code',
-    description: 'Tamu scan QR code yang terpasang di meja untuk membuka menu digital di browser HP mereka.',
-    path: `/m/${config.outletSlug}`,
-    cta: 'Lihat Demo Menu',
+    title: 'Menu Digital',
+    description: 'Lihat tampilan menu di HP tamu',
+    href: `/m/${config.outletSlug}`,
+    icon: Coffee,
+    color: 'bg-primary-100 text-primary-600',
   },
   {
-    id: 'order-flow',
-    icon: <Coffee className="w-6 h-6" />,
-    title: '2. Pilih & Pesan',
-    description: 'Tamu browse menu, pilih item, tambahkan ke keranjang, dan kirim pesanan ke dapur.',
-    path: `/m/${config.outletSlug}`,
-    cta: 'Lihat Menu Digital',
+    title: 'Kitchen Display',
+    description: 'Monitor pesanan untuk dapur',
+    href: `/kitchen/${config.outletSlug}`,
+    icon: Monitor,
+    color: 'bg-orange-100 text-orange-600',
   },
   {
-    id: 'payment',
-    icon: <CreditCard className="w-6 h-6" />,
-    title: '3. Bayar',
-    description: 'Pilih metode pembayaran: Tunai di kasir atau QRIS dengan scan langsung dari HP.',
-    path: `/m/${config.outletSlug}/checkout`,
-    cta: 'Demo Pembayaran',
+    title: 'Admin Panel',
+    description: 'Kelola menu, meja, dan lihat laporan',
+    href: '/admin',
+    icon: BarChart3,
+    color: 'bg-green-100 text-green-600',
   },
   {
-    id: 'kitchen',
-    icon: <Zap className="w-6 h-6" />,
-    title: '4. Dapur Terima Order',
-    description: 'Order langsung muncul di Kitchen Display System (KDS) dengan estimasi waktu tunggu.',
-    path: `/kitchen/${config.outletSlug}`,
-    cta: 'Lihat KDS',
+    title: 'Tables & QR',
+    description: 'Setup meja dan generate QR code',
+    href: '/admin/tables',
+    icon: QrCode,
+    color: 'bg-purple-100 text-purple-600',
+  },
+]
+
+const features = [
+  {
+    title: 'Tanpa Install',
+    description: 'Buka langsung di browser HP, tidak perlu download app',
+    icon: Users,
+    color: 'bg-blue-50 text-blue-600',
   },
   {
-    id: 'status',
-    icon: <Clock className="w-6 h-6" />,
-    title: '5. Pantau Status',
-    description: 'Tamu bisa pantau pesanan mereka dari HP: Diterima → Diproses → Siap → Selesai.',
-    path: `/m/${config.outletSlug}/status/demo`,
-    cta: 'Demo Tracking',
+    title: 'Real-time',
+    description: 'Update otomatis ke semua layar secara instan',
+    icon: Zap,
+    color: 'bg-green-50 text-green-600',
   },
   {
-    id: 'admin',
-    icon: <BarChart3 className="w-6 h-6" />,
-    title: '6. Monitor & Reports',
-    description: 'Admin bisa lihat semua meja, atur menu, dan lihat laporan penjualan.',
-    path: '/admin',
-    cta: 'Buka Admin Panel',
+    title: 'Estimasi Waktu',
+    description: 'Tamu tahu kapan pesanan mereka selesai',
+    icon: Clock,
+    color: 'bg-amber-50 text-amber-600',
   },
 ]
 
 export default function DemoGuide() {
-  const [activeStep, setActiveStep] = useState(0)
-
-  useEffect(() => {
-    // Auto-advance steps every 5 seconds
-    const interval = setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % guideSteps.length)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [])
-
   return (
     <div className="space-y-6">
-      <Card className="border-orange-200 bg-gradient-to-br from-orange-50 to-white">
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold text-admin-text-primary">Demo Guide</h1>
+        <p className="text-sm text-admin-text-secondary">Ikuti alur sistem QR Ordering dari awal hingga selesai</p>
+      </div>
+
+      {/* Flow Steps */}
+      <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Play className="w-5 h-5 text-orange-600" />
-            Demo Walkthrough
-          </CardTitle>
-          <CardDescription>
-            Ikuti alur demo untuk melihat semua fitur sistem
-          </CardDescription>
+          <CardTitle className="text-lg">Alur Sistem</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-            {guideSteps.map((step, index) => (
-              <button
-                key={step.id}
-                onClick={() => setActiveStep(index)}
-                className={`p-4 rounded-lg border-2 transition-all text-left ${
-                  activeStep === index
-                    ? 'border-orange-500 bg-orange-50'
-                    : 'border-gray-200 hover:border-orange-300'
-                }`}
-              >
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-3 ${
-                  activeStep === index ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-600'
-                }`}>
-                  {step.icon}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {flowSteps.map((step, index) => (
+              <div key={step.step} className="relative">
+                <div className={cn(
+                  'rounded-xl p-4 text-center transition-all',
+                  'bg-white border border-neutral-200 hover:border-primary-200 hover:shadow-sm'
+                )}>
+                  <div className={cn('w-12 h-12 rounded-xl mx-auto mb-3 flex items-center justify-center', step.color)}>
+                    <step.icon className="w-6 h-6" />
+                  </div>
+                  <p className="text-xs text-admin-text-secondary mb-1">Step {step.step}</p>
+                  <p className="font-semibold text-admin-text-primary text-sm">{step.title}</p>
+                  <p className="text-xs text-admin-text-secondary mt-1 hidden lg:block">{step.description}</p>
                 </div>
-                <p className="text-sm font-medium text-gray-900">{step.title}</p>
-              </button>
+                {index < flowSteps.length - 1 && (
+                  <div className="hidden lg:block absolute top-1/2 -right-3 transform -translate-y-1/2">
+                    <ArrowRight className="w-4 h-4 text-neutral-300" />
+                  </div>
+                )}
+              </div>
             ))}
-          </div>
-
-          <div className="bg-white rounded-lg border p-6">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 flex-shrink-0">
-                {guideSteps[activeStep].icon}
-              </div>
-              <div className="flex-1">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                  {guideSteps[activeStep].title}
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  {guideSteps[activeStep].description}
-                </p>
-                <a
-                  href={guideSteps[activeStep].path}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button className="bg-orange-600 hover:bg-orange-700">
-                    {guideSteps[activeStep].cta}
-                    <ChevronRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </a>
-              </div>
-            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Feature Highlights */}
+      {/* Quick Access */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Demo Cepat</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {quickLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block"
+              >
+                <div className={cn(
+                  'rounded-xl p-5 transition-all',
+                  'bg-neutral-50 border border-neutral-200',
+                  'hover:bg-primary-50 hover:border-primary-200 hover:shadow-sm'
+                )}>
+                  <div className="flex items-start justify-between mb-3">
+                    <div className={cn('w-10 h-10 rounded-lg flex items-center justify-center', link.color)}>
+                      <link.icon className="w-5 h-5" />
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:text-primary-600 transition-colors" />
+                  </div>
+                  <p className="font-semibold text-admin-text-primary">{link.title}</p>
+                  <p className="text-sm text-admin-text-secondary mt-1">{link.description}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Features */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="hover:shadow-md transition-shadow">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600">
-                <Clock className="w-5 h-5" />
-              </div>
-              <h4 className="font-semibold">Estimasi Waktu</h4>
+        {features.map((feature) => (
+          <div key={feature.title} className={cn(
+            'rounded-xl p-4 border border-neutral-200',
+            feature.color
+          )}>
+            <div className="flex items-center gap-3 mb-2">
+              <feature.icon className="w-5 h-5" />
+              <span className="font-semibold">{feature.title}</span>
             </div>
-            <p className="text-sm text-gray-600">
-              Tamu tahu berapa lama menunggu dengan estimasi real-time berdasarkan posisi antrean.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
-                <Users className="w-5 h-5" />
-              </div>
-              <h4 className="font-semibold">Tanpa Install</h4>
-            </div>
-            <p className="text-sm text-gray-600">
-              Tamu cukup scan QR - menu terbuka langsung di browser HP, tidak perlu download app.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600">
-                <BarChart3 className="w-5 h-5" />
-              </div>
-              <h4 className="font-semibold">Real-time</h4>
-            </div>
-            <p className="text-sm text-gray-600">
-              Update otomatis di semua layar - dapur, kasir, dan HP tamu sinkron secara instan.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Quick Links */}
-      <div className="bg-gray-50 rounded-lg p-4">
-        <h4 className="font-semibold mb-3">Link Cepat Demo</h4>
-        <div className="flex flex-wrap gap-2">
-          <a href={`/m/${config.outletSlug}`} target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" size="sm">
-              <Coffee className="w-4 h-4 mr-2" />
-              Menu Digital
-            </Button>
-          </a>
-          <a href={`/kitchen/${config.outletSlug}`} target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" size="sm">
-              <Zap className="w-4 h-4 mr-2" />
-              Kitchen Display
-            </Button>
-          </a>
-          <a href="/admin" target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" size="sm">
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Admin Panel
-            </Button>
-          </a>
-          <a href="/admin/tables" target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" size="sm">
-              <QrCode className="w-4 h-4 mr-2" />
-              Tables & QR
-            </Button>
-          </a>
-        </div>
+            <p className="text-sm opacity-80">{feature.description}</p>
+          </div>
+        ))}
       </div>
     </div>
   )
