@@ -86,22 +86,64 @@ export default function ReportsPage() {
   }, [period])
 
   const exportCSV = () => {
-    const headers = ['Item', 'Quantity Sold', 'Revenue']
-    const rows = bestSellers.map(item => [item.name, item.quantity, item.revenue])
-    const csvContent = [
-      'Best Sellers Report\n',
-      headers.join(','),
-      ...rows.map(row => row.join(',')),
-      '\n\nHourly Distribution\n',
-      'Hour,Orders',
-      ...hourlyData.map(d => `${d.hour},${d.orders}`),
-    ].join('\n')
+    const now = new Date().toISOString().split('T')[0]
+    const periodLabel = periodTabs.find(t => t.value === period)?.label || period
 
-    const blob = new Blob([csvContent], { type: 'text/csv' })
+    const csvLines: string[] = []
+
+    // Header
+    csvLines.push('LAPORAN PENJUALAN')
+    csvLines.push(`Periode: ${periodLabel}`)
+    csvLines.push(`Tanggal Export: ${now}`)
+    csvLines.push('')
+
+    // Summary Stats
+    csvLines.push('RINGKASAN')
+    csvLines.push('Total Order,Total Revenue,Avg Order Value')
+    csvLines.push(`${stats.totalOrders},${stats.totalRevenue},${stats.avgOrderValue}`)
+    csvLines.push('')
+
+    // Best Sellers
+    csvLines.push('MENU TERLARIS')
+    csvLines.push('Rank,Item,Quantity,Revenue')
+    bestSellers.forEach((item, index) => {
+      csvLines.push(`${index + 1},"${item.name}",${item.quantity},${item.revenue}`)
+    })
+    csvLines.push('')
+
+    // Hourly Distribution
+    csvLines.push('DISTRIBUSI PER JAM')
+    csvLines.push('Jam,Orders')
+    hourlyData.forEach(d => {
+      csvLines.push(`${d.hour},${d.orders}`)
+    })
+    csvLines.push('')
+
+    // Table Performance
+    if (tablePerformance.length > 0) {
+      csvLines.push('PERFORMA MEJA')
+      csvLines.push('Meja,Orders,Revenue')
+      tablePerformance.forEach(table => {
+        csvLines.push(`${table.tableNumber},${table.orders},${table.revenue}`)
+      })
+      csvLines.push('')
+    }
+
+    // Status Distribution
+    if (statusDistribution.length > 0) {
+      csvLines.push('STATUS ORDER')
+      csvLines.push('Status,Count')
+      statusDistribution.forEach(s => {
+        csvLines.push(`${s.status},${s.count}`)
+      })
+    }
+
+    const csvContent = csvLines.join('\n')
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `sales-report-${period}-${new Date().toISOString().split('T')[0]}.csv`
+    a.download = `sales-report-${period}-${now}.csv`
     a.click()
     URL.revokeObjectURL(url)
   }
