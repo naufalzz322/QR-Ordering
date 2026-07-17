@@ -176,7 +176,7 @@ Fitur:
 
 ## 4. Kitchen Display System (KDS)
 
-Akses: `/kitchen/[outlet-slug]`
+Akses: [`/kitchen/[outlet-slug]`](https://qr-ordering-eight.vercel.app/kitchen/warung-nusantara-sby)
 
 **Display khusus untuk dapur**
 
