@@ -1,20 +1,16 @@
 import { createClient } from '@supabase/supabase-js'
+import { getServerSupabaseConfig } from './supabaseConfig'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-// Server-side client with service role (for admin operations)
+// Create the server client only when an upload/delete request needs it. Keeping
+// this lazy prevents a malformed deployment variable from crashing `next build`
+// while still returning a clear configuration error at runtime.
 export const createServerSupabaseClient = () => {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    }
-  )
+  const { url, serviceRoleKey } = getServerSupabaseConfig()
+
+  return createClient(url, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  })
 }

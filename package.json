@@ -7,7 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --import tsx --test lib/orderValidation.test.ts lib/cronAuth.test.ts",
+    "test": "node --import tsx --test lib/orderValidation.test.ts lib/cronAuth.test.ts lib/supabaseConfig.test.ts",
     "test:watch": "node --import tsx --test --watch lib/orderValidation.test.ts",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
