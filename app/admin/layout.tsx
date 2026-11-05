@@ -93,30 +93,29 @@ function AdminLayout({ children }: { children: React.ReactNode }) {
               <Play className="w-5 h-5" />
               <span className="font-medium">Demo Guide</span>
             </Link>
-          </nav>
 
-          {/* Bottom section - sticky */}
-          <div className="p-4 border-t border-admin-border bg-white space-y-1">
-            <Link
-              href="/admin/settings"
-              className={cn(
-                'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
-                isActive('/admin/settings')
-                  ? 'bg-primary-50 text-primary-700 font-medium'
-                  : 'text-admin-text-secondary hover:bg-neutral-100'
-              )}
-            >
-              <Settings className="w-5 h-5" />
-              <span>Pengaturan</span>
-            </Link>
-            <button
-              onClick={() => signOut({ callbackUrl: '/login' })}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-error-600 hover:bg-error-50 transition-colors"
-            >
-              <LogOut className="w-5 h-5" />
-              <span>Keluar</span>
-            </button>
-          </div>
+            <div className="mt-4 border-t border-admin-border pt-4 space-y-1">
+              <Link
+                href="/admin/settings"
+                className={cn(
+                  'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
+                  isActive('/admin/settings')
+                    ? 'bg-primary-50 text-primary-700 font-medium'
+                    : 'text-admin-text-secondary hover:bg-neutral-100'
+                )}
+              >
+                <Settings className="w-5 h-5" />
+                <span>Pengaturan</span>
+              </Link>
+              <button
+                onClick={() => signOut({ callbackUrl: '/login' })}
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-error-600 hover:bg-error-50 transition-colors"
+              >
+                <LogOut className="w-5 h-5" />
+                <span>Keluar</span>
+              </button>
+            </div>
+          </nav>
         </aside>
 
         {/* Main content */}
