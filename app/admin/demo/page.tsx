@@ -91,7 +91,7 @@ const features = [
   },
   {
     title: 'Real-time',
-    description: 'Update otomatis ke semua layar secara instan',
+    description: 'Layar diperbarui berkala melalui polling',
     icon: Zap,
     color: 'bg-green-50 text-green-600',
   },
@@ -111,6 +111,22 @@ export default function DemoGuide() {
         <h1 className="text-2xl font-bold text-admin-text-primary">Demo Guide</h1>
         <p className="text-sm text-admin-text-secondary">Ikuti alur sistem QR Ordering dari awal hingga selesai</p>
       </div>
+
+      <Card className="border-amber-300 bg-amber-50">
+        <CardContent className="pt-6">
+          <h2 className="font-semibold text-amber-900">Demo saja — pembayaran disimulasikan</h2>
+          <p className="mt-1 text-sm text-amber-800">
+            Tidak ada transaksi atau transfer uang nyata. Layar pesanan diperbarui berkala, bukan secara instan.
+          </p>
+          <div className="mt-4 border-t border-amber-200 pt-4">
+            <p className="text-sm font-semibold text-amber-900">Reset data demo (khusus pemilik/developer)</p>
+            <p className="mt-1 text-sm text-amber-800">
+              Jalankan <code className="rounded bg-amber-100 px-1">npm run db:seed</code> di lingkungan lokal untuk membuat ulang data demo. Perintah ini menghapus data yang ada lalu membuat data contoh baru; jangan jalankan pada database berisi data penting.
+            </p>
+            <p className="mt-1 text-xs text-amber-800">Pengunjung cukup memuat ulang halaman; tidak tersedia reset data publik.</p>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Flow Steps */}
       <Card>
