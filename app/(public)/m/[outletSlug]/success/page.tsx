@@ -169,9 +169,12 @@ function OrderSuccessContent() {
           <div className="w-24 h-24 bg-success-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
             <CheckCircle className="w-12 h-12 text-success-600" />
           </div>
-          <h1 className="text-2xl font-bold text-guest-text mb-2">Pembayaran Berhasil!</h1>
+          <h1 className="text-2xl font-bold text-guest-text mb-2">Pesanan Berhasil!</h1>
           <p className="text-guest-text-muted">
             Pesanan Anda sedang diproses di dapur
+          </p>
+          <p className="mt-2 text-xs text-amber-700">
+            Status pembayaran ini disimulasikan untuk demo; tidak ada transaksi nyata.
           </p>
         </div>
 

@@ -500,7 +500,7 @@ function MenuPage() {
           onClick={closeItemModal}
         >
           <div
-            className="bg-white w-full max-h-[90vh] sm:max-w-md sm:rounded-2xl rounded-t-2xl overflow-hidden animate-slide-up"
+            className="bg-white w-full max-h-[90vh] sm:max-w-md sm:rounded-2xl rounded-t-2xl overflow-hidden flex flex-col animate-slide-up"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
@@ -512,7 +512,7 @@ function MenuPage() {
             </button>
 
             {/* Image */}
-            <div className="relative h-48 sm:h-56 bg-gray-100 overflow-hidden">
+            <div className="relative h-48 sm:h-56 shrink-0 bg-gray-100 overflow-hidden">
               {selectedItem.photoUrl ? (
                 <Image
                   src={selectedItem.photoUrl}
@@ -527,7 +527,7 @@ function MenuPage() {
             </div>
 
             {/* Content */}
-            <div className="p-5 pb-24">
+            <div className="min-h-0 flex-1 overflow-y-auto p-5 pb-6">
               <h2 className="text-xl font-bold text-guest-text mb-1">{selectedItem.name}</h2>
               <p className="text-guest-primary font-bold text-lg mb-2">
                 {formatCurrency(getItemPrice())}
@@ -578,7 +578,7 @@ function MenuPage() {
             </div>
 
             {/* Fixed Bottom Button */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 sm:relative sm:border-0 sm:p-5 sm:bg-transparent">
+            <div className="shrink-0 p-4 bg-white border-t border-gray-100 sm:p-5">
               <div className="flex items-center gap-4 max-w-md mx-auto">
                 <div className="flex items-center gap-3 bg-gray-100 rounded-full px-3 py-2">
                   <button

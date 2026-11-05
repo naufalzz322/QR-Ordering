@@ -1,15 +1,7 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { config } from '@/lib/config'
-
-// Verify cron secret
-function verifyCronSecret(request: Request): boolean {
-  const cronSecret = process.env.CRON_SECRET
-  if (!cronSecret) return true // Skip if not configured
-
-  const authHeader = request.headers.get('authorization')
-  return authHeader === `Bearer ${cronSecret}`
-}
+import { isCronAuthorized } from '@/lib/cronAuth'
 
 // POST /api/admin/orders/archive - Archive completed orders from yesterday (end of day)
 // Run this daily at end of day via cron-job.org
@@ -18,7 +10,7 @@ function verifyCronSecret(request: Request): boolean {
 export async function POST(request: Request) {
   try {
     // Verify cron secret
-    if (!verifyCronSecret(request)) {
+    if (!isCronAuthorized(request)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
     // Get outlet from body or config

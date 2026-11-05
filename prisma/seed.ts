@@ -1,9 +1,7 @@
-import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
+import prisma from '../lib/prisma'
 
-const prisma = new PrismaClient()
-
-async function main() {
+export async function seedDemoData() {
   console.log('🌱 Seeding database...')
 
   // Clean up existing data (in reverse order of dependencies)
@@ -371,12 +369,3 @@ async function main() {
   console.log('  View tokens in admin panel: /admin/tables')
   console.log('========================================')
 }
-
-main()
-  .catch((e) => {
-    console.error('❌ Seed failed:', e)
-    process.exit(1)
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })

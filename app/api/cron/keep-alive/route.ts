@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { isCronAuthorized } from '@/lib/cronAuth'
 
 // GET /api/cron/keep-alive - Keep Supabase project active (free tier pauses after 7 days of inactivity)
 // Trigger via cron-job.org every few hours: https://<app-url>/api/cron/keep-alive
@@ -7,12 +8,8 @@ import prisma from '@/lib/prisma'
 
 export async function GET(request: Request) {
   try {
-    const cronSecret = process.env.CRON_SECRET
-    if (cronSecret) {
-      const authHeader = request.headers.get('authorization')
-      if (authHeader !== `Bearer ${cronSecret}`) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-      }
+    if (!isCronAuthorized(request)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     // Real database traffic resets Supabase's inactivity timer

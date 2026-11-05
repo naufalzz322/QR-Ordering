@@ -65,15 +65,16 @@ Gunakaan [Scan Page](https://qr-ordering-eight.vercel.app/scan) atau aplikasi sc
 ### 2.5 Pembayaran
 
 1. Tap **"Pesan Sekarang"** di keranjang
-2. Pilih metode pembayaran:
-   - **Tunai** - Bayar di kasir
-   - **QRIS** - Scan QR dengan aplikasi bank/e-wallet
-3. Untuk QRIS, scan kode QR dan konfirmasi pembayaran
-4. Pesanan terkirim ke dapur
+2. Pilih metode pembayaran demo:
+   - **Tunai (simulasi)** - Konfirmasi demo; tidak ada pembayaran nyata di kasir
+   - **QRIS (simulasi)** - Tampilan QR demo; tidak ada transaksi atau transfer uang nyata
+3. QRIS demo akan menampilkan konfirmasi simulasi secara otomatis; tidak perlu memindai QR dengan aplikasi bank/e-wallet
+4. Pesanan demo terkirim ke Kitchen Display
 
 ### 2.6 Pantau Status
 
-- Setelah bayar, muncul halaman status pesanan
+- Setelah konfirmasi demo, muncul halaman status pesanan
+- Status diperbarui berkala melalui polling, bukan realtime instan
 - Status berurutan:
   - **Diterima** - Pesanan diterima dapur
   - **Diproses** - Sedang dibuat

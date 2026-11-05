@@ -24,6 +24,7 @@ export default function PaymentPage() {
   const [processing, setProcessing] = useState(false)
   const [showQR, setShowQR] = useState(false)
   const [paymentSuccess, setPaymentSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const total = getTotal()
 
@@ -38,6 +39,7 @@ export default function PaymentPage() {
   }, [showQR, selectedPayment])
 
   const handlePaymentSelect = (method: PaymentMethod) => {
+    setError(null)
     setSelectedPayment(method)
   }
 
@@ -47,6 +49,8 @@ export default function PaymentPage() {
   }
 
   const handlePaymentConfirm = async () => {
+    setError(null)
+
     // If no orderId, create the order first
     if (items.length === 0 || !tableToken) {
       router.push(`/m/${outletSlug}`)
@@ -92,6 +96,7 @@ export default function PaymentPage() {
       }, 2000)
     } catch (err) {
       console.error('Payment error:', err)
+      setError('Pesanan belum berhasil dikirim. Periksa koneksi lalu coba lagi.')
       setProcessing(false)
     }
   }
@@ -103,8 +108,9 @@ export default function PaymentPage() {
           <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
             <CheckCircle className="w-12 h-12 text-green-600" />
           </div>
-          <h1 className="text-2xl font-bold text-guest-text mb-2">Pembayaran Berhasil!</h1>
-          <p className="text-guest-text-muted">Mengalihkan ke halaman pesanan...</p>
+          <h1 className="text-2xl font-bold text-guest-text mb-2">Pesanan Demo Dikonfirmasi!</h1>
+          <p className="text-guest-text-muted">Konfirmasi ini disimulasikan; tidak ada pembayaran nyata.</p>
+          <p className="mt-2 text-sm text-guest-text-muted">Mengalihkan ke halaman pesanan...</p>
           <Loader2 className="w-6 h-6 animate-spin text-guest-primary mx-auto mt-4" />
         </div>
       </div>
@@ -123,7 +129,10 @@ export default function PaymentPage() {
             >
               <ArrowLeft className="w-5 h-5 text-guest-text" />
             </button>
-            <h1 className="text-lg font-bold text-guest-text">Scan QR Code</h1>
+            <div>
+              <h1 className="text-lg font-bold text-guest-text">Simulasi QRIS</h1>
+              <p className="text-xs text-guest-text-muted">Demo saja — tidak ada transaksi nyata</p>
+            </div>
           </div>
         </header>
 
@@ -138,19 +147,35 @@ export default function PaymentPage() {
                     <QrCode className="w-48 h-48 text-gray-800" />
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="w-16 h-16 bg-white rounded-lg border-4 border-orange-500 flex items-center justify-center">
-                        <span className="text-xs font-bold text-orange-500">QRIS</span>
+                        <span className="text-xs font-bold text-orange-500">DEMO</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="animate-pulse">
-                  <p className="text-guest-text-muted mb-2">Memindai QR Code...</p>
+                  <p className="text-guest-text-muted mb-2">Simulasi pembayaran berjalan...</p>
                   <div className="flex items-center justify-center gap-2">
                     <Loader2 className="w-5 h-5 animate-spin text-guest-primary" />
-                    <span className="text-sm text-guest-text">Menunggu pembayaran</span>
+                    <span className="text-sm text-guest-text">Konfirmasi demo otomatis</span>
                   </div>
                 </div>
+                <p className="mt-4 text-xs text-guest-text-muted" role="note">
+                  QR ini bukan kode pembayaran aktif. Tidak ada uang yang akan ditransfer.
+                </p>
+                {error && (
+                  <div role="alert" className="mt-4 rounded-lg bg-red-50 p-4 text-sm text-red-700">
+                    <p>{error}</p>
+                    <Button
+                      onClick={handlePaymentConfirm}
+                      disabled={processing}
+                      variant="outline"
+                      className="mt-3"
+                    >
+                      {processing ? 'Mencoba lagi...' : 'Coba kirim pesanan lagi'}
+                    </Button>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -189,7 +214,10 @@ export default function PaymentPage() {
           <Link href={`/m/${outletSlug}/checkout`} className="p-2 -ml-2 hover:bg-gray-100 rounded-full">
             <ArrowLeft className="w-5 h-5 text-guest-text" />
           </Link>
-          <h1 className="text-lg font-bold text-guest-text">Pilih Metode Pembayaran</h1>
+          <div>
+            <h1 className="text-lg font-bold text-guest-text">Pilih Metode Pembayaran</h1>
+            <p className="text-xs font-semibold text-amber-700">DEMO / SIMULASI — tidak ada pembayaran nyata</p>
+          </div>
         </div>
       </header>
 
@@ -247,7 +275,7 @@ export default function PaymentPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-guest-text">Tunai</h3>
-                  <p className="text-sm text-guest-text-muted">Bayar di kasir</p>
+                  <p className="text-sm text-guest-text-muted">Konfirmasi demo saja — tidak ada pembayaran di kasir</p>
                 </div>
                 <div className={cn(
                   'w-6 h-6 rounded-full border-2 flex items-center justify-center',
@@ -279,7 +307,7 @@ export default function PaymentPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-semibold text-guest-text">QRIS</h3>
-                  <p className="text-sm text-guest-text-muted">Scan dengan mobile banking / e-wallet</p>
+                  <p className="text-sm text-guest-text-muted">QRIS simulasi — tidak menagih atau mentransfer uang</p>
                 </div>
                 <div className={cn(
                   'w-6 h-6 rounded-full border-2 flex items-center justify-center',
@@ -296,7 +324,7 @@ export default function PaymentPage() {
 
         {/* Supported Apps */}
         <div className="mt-6 p-4 bg-gray-50 rounded-xl">
-          <p className="text-sm text-guest-text-muted mb-3">Didukung oleh:</p>
+          <p className="text-sm text-guest-text-muted mb-3">Contoh aplikasi pembayaran (tidak terhubung):</p>
           <div className="flex flex-wrap gap-2">
             {['GoPay', 'OVO', 'DANA', 'ShopeePay', 'BCA', 'Mandiri', 'BRI', 'BNI'].map((app) => (
               <span
@@ -313,6 +341,11 @@ export default function PaymentPage() {
       {/* Bottom Action */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
         <div className="max-w-lg mx-auto">
+          {error && (
+            <p role="alert" className="mb-3 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
+            </p>
+          )}
           <Button
             onClick={() => {
               if (selectedPayment === 'cash') {
@@ -338,8 +371,8 @@ export default function PaymentPage() {
             )}
           </Button>
           <p className="text-center text-xs text-guest-text-muted mt-2">
-            {selectedPayment === 'cash' && 'Silakan bayar di kasir setelah pesanan siap'}
-            {selectedPayment === 'qris' && 'Anda akan diarahkan ke halaman pembayaran QRIS'}
+            {selectedPayment === 'cash' && 'Simulasi demo: pesanan dikonfirmasi tanpa pembayaran nyata'}
+            {selectedPayment === 'qris' && 'Simulasi QRIS: konfirmasi demo otomatis, tanpa transaksi nyata'}
           </p>
         </div>
       </div>
